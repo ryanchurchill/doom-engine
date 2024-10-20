@@ -2,6 +2,7 @@
 #include <math.h>
 #include <memory.h>
 #include <stdio.h>
+#include "typedefs.h"
 
 #undef main
 
@@ -15,6 +16,23 @@ int ShouldQuit(SDL_Event event)
     if (event.type == SDL_QUIT || event.key.keysym.sym == SDLK_ESCAPE)
         return 1;
     return 0;
+}
+
+void PutPixel(int x, int y, Uint8 r, Uint8 g, Uint8 b)
+{
+    if (x > screenW || y > screenH)
+        return;
+
+    if (x < 0 || y < 0)
+        return;
+
+    SDL_SetRenderDrawColor(renderer, r, g, b, 255);
+    SDL_RenderDrawPoint(renderer, x, y);
+}
+
+void UpdateScreen()
+{
+    SDL_RenderPresent(renderer);
 }
 
 int main()
@@ -33,10 +51,10 @@ int main()
 
     int loop = 1;
     SDL_Event event;
+
     while (loop)
     {
         SDL_PollEvent(&event);
-
         if (ShouldQuit(event))
             break;
     }
