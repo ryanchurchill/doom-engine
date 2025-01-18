@@ -30,3 +30,11 @@ typedef struct
 	float distFromCamera;
 	int planeIdInPoly;
 } ScreenSpacePoly;
+
+typedef struct
+{
+	float camAngle;
+	float stepWave;
+	Vec2 camPos;
+	Vec2 oldCamPos;
+} Camera;
