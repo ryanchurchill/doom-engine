@@ -205,6 +205,49 @@ void Init()
     polys[9].vertCnt = 7;
 }
 
+void Render()
+{
+    for (int polyIdx = 0; polyIdx < MAX_POLYS; polyIdx++)
+    {
+        for (int i = 0; i < polys[polyIdx].vertCnt - 1; i++)
+        {
+            Vec2 p1 = polys[polyIdx].vert[i];
+            Vec2 p2 = polys[polyIdx].vert[i + 1];
+            float height = -polys[polyIdx].height;
+            float distX1 = p1.x - cam.camPos.x;
+            float distY1 = p1.y - cam.camPos.y;
+            float z1 = distX1 * cos(cam.camAngle) +
+                distY1 * sin(cam.camAngle);
+            float distX2 = p2.x - cam.camPos.x;
+            float distY2 = p2.y - cam.camPos.y;
+            float z2 = distX2 * cos(cam.camAngle) +
+                distY2 * sin(cam.camAngle);
+            distX1 = distX1 * sin(cam.camAngle) -
+                distY1 * cos(cam.camAngle);
+            distX2 = distX2 * sin(cam.camAngle) -
+                distY2 * cos(cam.camAngle);
+            float widthRatio = screenW / 2;
+            float heightRatio = (screenW * screenH) / 60.0;
+            float centerScreenH = screenH / 2;
+            float centerScreenW = screenW / 2;
+            float x1 = -distX1 * widthRatio / z1;
+            float x2 = -distX2 * widthRatio / z2;
+            float y1a = (height - heightRatio) / z1;
+            float y1b = heightRatio / z1;
+            float y2a = (height - heightRatio) / z2;
+            float y2b = heightRatio / z2;
+            DrawLine(centerScreenW + x1, centerScreenH + y1a,
+                centerScreenW + x2, centerScreenH + y2a);
+            DrawLine(centerScreenW + x1, centerScreenH + y1b,
+                centerScreenW + x2, centerScreenH + y2b);
+            DrawLine(centerScreenW + x1, centerScreenH + y1a,
+                centerScreenW + x1, centerScreenH + y1b);
+            DrawLine(centerScreenW + x2, centerScreenH + y2a,
+                centerScreenW + x2, centerScreenH + y2b);
+        }
+    }
+}
+
 int main()
 {
     //return 0;
@@ -223,6 +266,8 @@ int main()
     SDL_Event event;
 
     Init();
+
+    // Game loop
     while (loop)
     {
         //PutPixel(30, 30, 255, 0, 0);
@@ -232,6 +277,9 @@ int main()
         SDL_PollEvent(&event);
         if (ShouldQuit(event))
             break;
+
+        Render();
+        UpdateScreen();
     }
 
     SDL_DestroyRenderer(renderer);
