@@ -207,13 +207,16 @@ void Init()
 
 void Render()
 {
-    for (int polyIdx = 0; polyIdx < MAX_POLYS; polyIdx++)
+    for (int polyIdx = 0; polyIdx < MAX_POLYS; polyIdx++) // polygons
     {
-        for (int i = 0; i < polys[polyIdx].vertCnt - 1; i++)
+        for (int i = 0; i < polys[polyIdx].vertCnt - 1; i++) // vertices
         {
+            // two points to draw a line between
             Vec2 p1 = polys[polyIdx].vert[i];
             Vec2 p2 = polys[polyIdx].vert[i + 1];
             float height = -polys[polyIdx].height;
+
+            // distance from camera to each of the two points
             float distX1 = p1.x - cam.camPos.x;
             float distY1 = p1.y - cam.camPos.y;
             float z1 = distX1 * cos(cam.camAngle) +
@@ -222,10 +225,15 @@ void Render()
             float distY2 = p2.y - cam.camPos.y;
             float z2 = distX2 * cos(cam.camAngle) +
                 distY2 * sin(cam.camAngle);
+
+            // world-to-camera transformation
+            // note that this was already done for z1 and z2
             distX1 = distX1 * sin(cam.camAngle) -
                 distY1 * cos(cam.camAngle);
             distX2 = distX2 * sin(cam.camAngle) -
                 distY2 * cos(cam.camAngle);
+
+
             float widthRatio = screenW / 2;
             float heightRatio = (screenW * screenH) / 60.0;
             float centerScreenH = screenH / 2;
@@ -236,6 +244,8 @@ void Render()
             float y1b = heightRatio / z1;
             float y2a = (height - heightRatio) / z2;
             float y2b = heightRatio / z2;
+
+
             DrawLine(centerScreenW + x1, centerScreenH + y1a,
                 centerScreenW + x2, centerScreenH + y2a);
             DrawLine(centerScreenW + x1, centerScreenH + y1b,
